@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+    
+  <ImageView 
+      android:id="@+id/bookImage"
+      android:layout_width="match_parent"
+      android:layout_height="137dp"
+      android:layout_marginTop="3dp"
+      android:background="@drawable/test"/>
+  
+  <TextView
+        android:id="@+id/bookName"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textColor="#000000" />
+    
+</LinearLayout>

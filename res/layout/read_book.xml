@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.lsf.bookreader_lsf.app.view.BookPageView
+	    android:id="@+id/bookview"
+	    android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+    
+    <LinearLayout 
+        android:id="@+id/book_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#FFF"
+        android:visibility="gone">
+        
+        <Button 
+            android:id="@+id/shuffle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="音乐"/>
+        
+        <Button 
+            android:id="@+id/control_music"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+        
+        <Button 
+            android:id="@+id/setting"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="设置"/>
+    </LinearLayout>
+  
+     
+    <LinearLayout 
+        android:id="@+id/readprogress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FFF"
+        android:visibility="gone" >
+        
+        <TextView 
+            android:text="阅读进度:"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"/>
+        
+        <TextView 
+            android:id="@+id/bookprogress"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"/>
+        
+        <SeekBar 
+            android:id="@+id/progress_setting"
+            android:layout_width="0dp"
+            android:layout_weight="5.5"
+            android:max="10000"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+    
+</RelativeLayout>

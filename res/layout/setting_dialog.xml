@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/WHITE"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/lightness"
+        android:textColor="#7fbcff"
+        android:textSize="30sp" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+     		android:id="@+id/daytime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/radio_button_pattern"
+            android:button="@null"
+            android:text="@string/daymode" 
+            android:textSize="25sp" />
+
+        <RadioButton
+            android:id="@+id/night"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radio_button_pattern"
+            android:button="@null"
+            android:text="@string/nightmode"
+            android:textSize="25sp" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fontsize"
+        android:textColor="#7fbcff"
+        android:textSize="25sp" 
+        android:layout_marginTop="10dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="10dp"       
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/level1"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/radio_button_pattern"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/display"
+                android:textColor="@color/BLACK"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/level2"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/radio_button_pattern"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/display"
+                android:textColor="@color/BLACK"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/level3"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/radio_button_pattern"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/display"
+                android:textColor="@color/BLACK"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/level4"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/radio_button_pattern"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/display"
+                android:textColor="@color/BLACK"
+                android:textSize="24sp" />
+
+            <RadioButton
+                android:id="@+id/level5"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/radio_button_pattern"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/display"
+                android:textColor="@color/BLACK"
+                android:textSize="28sp" />
+
+            <RadioButton
+                android:id="@+id/level6"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/radio_button_pattern"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/display"
+                android:textColor="@color/BLACK"
+                android:textSize="32sp" />
+        </LinearLayout>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_bg_blue"
+        android:padding="10dp"
+        android:text="@string/ok"
+        android:textColor="@color/WHITE"
+        android:textSize="20sp" />
+
+</LinearLayout>
