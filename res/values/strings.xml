@@ -7,9 +7,10 @@
     <!-- menu -->
 	<string name="add">增加</string>
 	<string name="help">帮助</string>
+	
 	<string name="read">阅读</string>
-	<string name="update">修改</string>
 	<string name="delete">删除</string>
+	
 	<string name="name">书名</string>
 	<string name="author">作者</string>
 	<string name="intro">简介</string>
@@ -42,13 +43,10 @@
 	<string name="menu_skipto">进度跳转</string>
 
 	<string name="menu_bookmark">书签列表</string>
-
-	
-	<string name="header_hint_refresh_normal">下拉刷新</string>
-    <string name="header_hint_refresh_ready">释放刷新</string>
-    <string name="header_hint_refresh_loading">刷新中&#8230;</string>
-    <string name="header_hint_refresh_time">时间：</string>
-    <string name="footer_hint_load_normal">载入</string>
-    <string name="footer_hint_load_ready">释放载入</string>
-	
+    
+    <string name="pull_to_refresh">下拉刷新</string>
+    <string name="release_to_refresh">释放刷新</string>
+    <string name="refreshing">正在刷新&#8230;</string>
+    <string name="refresh_succeed">刷新成功</string>
+	<string name="refresh_fail">刷新失败</string>
 </resources>

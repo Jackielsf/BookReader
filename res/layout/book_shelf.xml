@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <com.lsf.bookreader_lsf.app.view.BookShelfGridView
         android:id="@+id/bookShelf"
         android:layout_width="fill_parent"
@@ -15,6 +15,28 @@
         android:listSelector="#00000000"
         android:numColumns="3"
         android:scrollbars="none"
-        android:verticalSpacing="20dp"/>
+        android:verticalSpacing="20dp" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/book_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#FFF"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/update_local"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="从本地更新" />
+
+        <Button
+            android:id="@+id/update_service"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="从服务器更新" />
+    </LinearLayout>
+</RelativeLayout>

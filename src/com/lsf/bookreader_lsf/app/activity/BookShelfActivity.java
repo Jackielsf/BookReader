@@ -1,11 +1,9 @@
 package com.lsf.bookreader_lsf.app.activity;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -14,22 +12,37 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,8 +54,10 @@ import com.lsf.bookreader_lsf.app.utils.ToastUtils;
 
 public class BookShelfActivity extends Activity {
 
+	private static String TAG = "BookShelfActivity";
 	private BookDB bookDB;
 	private ArrayList<Book> books;
+
 	private GridView bookShelf;
 
 	private ProgressDialog dialog;
@@ -51,24 +66,30 @@ public class BookShelfActivity extends Activity {
 	public static int width, height;
 	public static Bitmap itemBackground;
 
+	private int mDownPosX;
+	private int mUpPosX;
+	private LinearLayout bookUpdateLayout;
+	private Button updateFromLocal;
+	private Button updateFromService;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-	    		WindowManager.LayoutParams. FLAG_FULLSCREEN);  
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.book_shelf);
-		Display defaultDisplay = getWindowManager().getDefaultDisplay();
-		width = defaultDisplay.getWidth();
-		height = defaultDisplay.getHeight();
-		itemBackground = ImageUtil.getBitmap(this, R.drawable.cover_txt,
-				width / 4, height / 4);
+		init();
+	}
 
+	private void init() {
 		bookDB = BookDB.getInstance(this);
-		bookShelf = (GridView) findViewById(R.id.bookShelf);
-
+		initBookShelf();
 		loadBooks();
+	}
 
+	private void initBookShelf() {
+		bookShelf = (GridView) findViewById(R.id.bookShelf);
 		bookShelf.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -77,18 +98,84 @@ public class BookShelfActivity extends Activity {
 				readBook();
 			}
 		});
+		bookShelf.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				selectedIndex = position;
+				return false;
+			}
+		});
+		bookShelf.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (MotionEvent.ACTION_DOWN == event.getAction()) {
+					mDownPosX = (int) event.getX();
+				}
+				if (MotionEvent.ACTION_UP == event.getAction()) {
+					mUpPosX = (int) event.getX();
+					if (mUpPosX - mDownPosX > 300 || mDownPosX - mUpPosX > 300) {
+						showMenu();
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+		// 注册上下文菜单
+		registerForContextMenu(bookShelf);
+	}
 
-		// // 长按点击
-		// bookShelf.setOnItemLongClickListener(new OnItemLongClickListener() {
-		//
-		// public boolean onItemLongClick(AdapterView<?> parent, View view, int
-		// position, long id) {
-		// selectedIndex = position;
-		// return false;
-		// }
-		// });
-		// // 注册上下文菜单
-		// registerForContextMenu(bookShelf);
+	private void showMenu() {
+		bookUpdateLayout = (LinearLayout) findViewById(R.id.book_update);
+		bookUpdateLayout.setVisibility(View.VISIBLE);
+		updateFromLocal = (Button) findViewById(R.id.update_local);
+		updateFromLocal.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				bookUpdateFromLocal();
+				bookUpdateLayout.setVisibility(View.GONE);
+			}
+		});
+		updateFromService = (Button) findViewById(R.id.update_service);
+		updateFromService.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				bookUpdateFromService();
+				bookUpdateLayout.setVisibility(View.GONE);
+			}
+		});
+	}
+
+	private void bookUpdateFromLocal() {
+		File path = Environment.getExternalStorageDirectory();// 获得SD卡路径
+		File bookPath = new File(path.toString() + "/BookReader/books/");
+		File[] files = bookPath.listFiles();
+		for (File file : files) {
+			String fileName = file.getName();
+			if (fileName.endsWith(".txt")) {
+				String name = fileName.substring(0, fileName.lastIndexOf(".")).toString();
+				if(bookDB.queryName(new String[] {name} ) == null){
+					Book book = new Book();
+					book.setName(name);
+					book.setFilePath(bookPath + "/" + name + ".txt");
+					File imagePath = new File(path.toString() + "/BookReader/images/" + name + ".png");
+					if(imagePath.exists()){
+						book.setImagePath(imagePath.toString());
+					}
+					bookDB.save(book);
+				}
+			}
+		}
+		loadBooks();
+	}
+
+	private void bookUpdateFromService() {
+
+	}
+
+	private void showMore() {
+
 	}
 
 	private void readBook() {
@@ -126,12 +213,12 @@ public class BookShelfActivity extends Activity {
 	// startActivityForResult(intent, REQUEST_CODE_IMPORT_BOOK);
 	// break;
 	// case R.id.menu_help:
-	// //跳转到viewpager页面
+	// // 跳转到viewpager页面
 	// Intent intent1 = new Intent(MyBook.this, ViewPagerActivity.class);
 	// startActivity(intent1);
 	// break;
 	// case R.id.menu_setting:
-	// //跳转到设置页面
+	// // 跳转到设置页面
 	// Intent intent2 = new Intent(MyBook.this, SettingActivity.class);
 	// startActivity(intent2);
 	// break;
@@ -151,7 +238,11 @@ public class BookShelfActivity extends Activity {
 
 	private void loadBooks() {
 		books = bookDB.getAllBooks();
-		Log.d("lsfreader", "books.size:" + books.size());
+		Display defaultDisplay = getWindowManager().getDefaultDisplay();
+		width = defaultDisplay.getWidth();
+		height = defaultDisplay.getHeight();
+		itemBackground = ImageUtil.getBitmap(this, R.drawable.cover_txt,
+				width / 3, height / 3);
 		ShlefAdapter adapter = new ShlefAdapter();
 		bookShelf.setAdapter(adapter);
 	}
@@ -175,58 +266,56 @@ public class BookShelfActivity extends Activity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// 图片显示有问题，现在是写死的一张图片。
 			Book book = getItem(position);
 			convertView = LayoutInflater.from(getApplicationContext()).inflate(
 					R.layout.book_item, null);
-			TextView textView = (TextView) convertView
+			TextView textViewName = (TextView) convertView
 					.findViewById(R.id.bookName);
-			ImageView iamgeView = (ImageView) convertView
+			TextView textViewImage = (TextView) convertView
 					.findViewById(R.id.bookImage);
-			Bitmap bm = BitmapFactory.decodeFile(book.getImagePath());
-			iamgeView.setImageBitmap(bm);
-			textView.setText(book.getName());
+			if (book.getImagePath() == null) {
+				textViewImage.setBackgroundColor(Color.rgb(199, 237, 204));
+				textViewImage.setText(book.getName());
+			} else {
+				Bitmap bm = BitmapFactory.decodeFile(book.getImagePath());
+				Drawable drawable = new BitmapDrawable(bm);
+				textViewImage.setBackground(drawable);
+			}
+			textViewName.setText(book.getName());
 			BitmapDrawable bitmapDrawable = new BitmapDrawable(itemBackground);
-			textView.setBackgroundDrawable(bitmapDrawable);
+			textViewName.setBackgroundDrawable(bitmapDrawable);
 			return convertView;
 		}
 	}
 
-	// // 创建上下文菜单
-	// @Override
-	// public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo
-	// menuInfo) {
-	// menu.setHeaderTitle("上下文菜单");
-	// MenuInflater inflater = new MenuInflater(this);
-	// inflater.inflate(R.menu.menu_book, menu);
-	// super.onCreateContextMenu(menu, v, menuInfo);
-	// }
+	// 创建上下文菜单
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		// menu.setHeaderTitle("上下文菜单");
+		MenuInflater inflater = new MenuInflater(this);
+		inflater.inflate(R.menu.menu_book, menu);
+		super.onCreateContextMenu(menu, v, menuInfo);
+	}
 
 	// 处理上下文菜单的点击事件
-	// @Override
-	// public boolean onContextItemSelected(MenuItem item) {
-	// switch (item.getItemId()) {
-	// case R.id.read:
-	// readBook();
-	// break;
-	// case R.id.update:
-	// // emp.do?id=200
-	// // Long id = books.get(selectedIndex).getId();
-	// // Intent intent = new Intent(this, BookFormActivity.class);
-	// // intent.putExtra("bookId", id);
-	// // startActivityForResult(intent, BOOK_UPDATE);
-	// break;
-	// case R.id.delete:
-	// Long id1 = books.get(selectedIndex).getId();
-	// bookManager.delete(id1);
-	// ToastUtils.toast(this, R.string.msg_delete_success);
-	// loadData();
-	// break;
-	// default:
-	// break;
-	// }
-	// return super.onContextItemSelected(item);
-	// }
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.read:
+			readBook();
+			break;
+		case R.id.delete:
+			Long id1 = books.get(selectedIndex).getId();
+			bookDB.delete(id1);
+			ToastUtils.toast(this, R.string.msg_delete_success);
+			loadBooks();
+			break;
+		default:
+			break;
+		}
+		return super.onContextItemSelected(item);
+	}
 
 	// 改变主页面的返回事件
 	@Override

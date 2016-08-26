@@ -28,10 +28,13 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 				+ "values ('万古至尊', '/storage/emulated/0/BookReader/books/万古至尊.txt', '/storage/emulated/0/BookReader/images/万古至尊.png')");
 		db.execSQL("insert into " + TABLE_NAME + " (book_name, file_path, image_path) "
 				+ "values ('不死武尊', '/storage/emulated/0/BookReader/books/不死武尊.txt', '/storage/emulated/0/BookReader/images/不死武尊.png')");
-		db.execSQL("insert into " + TABLE_NAME + " (book_name, file_path, image_path) "
-				+ "values ('十国千娇', '/storage/emulated/0/BookReader/books/十国千娇.txt', '/storage/emulated/0/BookReader/images/十国千娇.png')");
-		db.execSQL("insert into " + TABLE_NAME + " (book_name, file_path, image_path) "
-				+ "values ('战神年代', '/storage/emulated/0/BookReader/books/战神年代.txt', '/storage/emulated/0/BookReader/images/战神年代.png')");
+//		db.execSQL("insert into " + TABLE_NAME + " (book_name, file_path, image_path) "
+//				+ "values ('十国千娇', '/storage/emulated/0/BookReader/books/十国千娇.txt', '/storage/emulated/0/BookReader/images/十国千娇.png')");
+//		db.execSQL("insert into " + TABLE_NAME + " (book_name, file_path, image_path) "
+//				+ "values ('战神年代', '/storage/emulated/0/BookReader/books/战神年代.txt', '/storage/emulated/0/BookReader/images/战神年代.png')");
+//		db.execSQL("insert into " + TABLE_NAME + " (book_name, file_path) "
+//				+ "values ('饲主', '/storage/emulated/0/BookReader/books/饲主.txt')");
+
 	}
 
 	@Override

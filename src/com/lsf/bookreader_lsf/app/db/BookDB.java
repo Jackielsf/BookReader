@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class BookDB {
-	
+
 	private static final String TAG = "BookDB";
 
 	public static final String DB_NAME = "book_reader_lsf";
@@ -43,51 +43,45 @@ public class BookDB {
 		return bookDB;
 	}
 
-	// /**
-	// * 保存book
-	// *
-	// * @param book
-	// * ：图书领域类对象
-	// * @return：返回保存的主键
-	// */
-	// public Long save(Book book) {
-	// SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
-	// // 重构方法的演示
-	// ContentValues values = bookToContentValues(book);
-	// // 只有使用对象的方法操作SQLite才能返回保存的主键,具体可以看Android源码，O(∩_∩)O哈哈~
-	// Long count = sqLiteDatabase.insert(TABLE_NAME, null, values);
-	// sqLiteDatabase.close();
-	// return count;
-	// }
+	public Long save(Book book) {
+		ContentValues values = bookToContentValues(book);
+		Long count = db.insert(TABLE_NAME, null, values);
+		return count;
+	}
 
 	public long update(Book book) {
-		// 重构方法的演示
 		ContentValues values = bookToContentValues(book);
 		long count = db.update(TABLE_NAME, values, BOOK_ID + "=?",
 				new String[] { book.getId().toString() });
 		return count;
 	}
 
-	//
-	// /**
-	// * 删除book
-	// *
-	// * @param 图书领域类对象主键
-	// * @return：返回保存的主键
-	// */
-	// public long delete(Long id) {
-	// SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
-	// long count = sqLiteDatabase.delete(TABLE_NAME, BookColumn._ID + "=?", new
-	// String[] { id.toString() });
-	// sqLiteDatabase.close();
-	// return count;
-	// }
+	public long delete(Long id) {
+		long count = db.delete(TABLE_NAME, BOOK_ID + "=?",
+				new String[] { id.toString() });
+		return count;
+	}
+	
+	public Book queryName(String[] name) {
+		Book book = null;
+		Cursor cursor = db.query(TABLE_NAME, new String[] { BOOK_ID, BOOK_NAME,
+				FILE_PATH, IMAGE_PATH, LAST_READ_TIME, BEGIN, PROGRESS },
+				BOOK_NAME + "=?", name, null, null,
+				null);
+		if (cursor.moveToFirst()) {
+			book = cursorToBook(cursor);
+			Log.w("BookTest", "book : " + book.toString());
+			cursor.close();// 关闭游标
+		}
+		return book;
+	}
 
 	public Book get(Long id) {
 		Book book = null;
 		Cursor cursor = db.query(TABLE_NAME, new String[] { BOOK_ID, BOOK_NAME,
 				FILE_PATH, IMAGE_PATH, LAST_READ_TIME, BEGIN, PROGRESS },
-				BOOK_ID + "=?", new String[] { id.toString() }, null, null, null);
+				BOOK_ID + "=?", new String[] { id.toString() }, null, null,
+				null);
 		if (cursor.moveToFirst()) {
 			book = cursorToBook(cursor);
 			Log.w("BookTest", "book : " + book.toString());
@@ -160,7 +154,6 @@ public class BookDB {
 			values.put(LAST_READ_TIME, book.getLastReadTime().getTime());
 		}
 		values.put(BEGIN, book.getBegin());
-		Log.w(TAG + "seekbar", book.getProgress());
 		values.put(PROGRESS, book.getProgress());
 		return values;
 	}

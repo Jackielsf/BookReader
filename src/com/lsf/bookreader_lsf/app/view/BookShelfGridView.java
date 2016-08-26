@@ -24,7 +24,7 @@ public class BookShelfGridView extends GridView {
 
 		int count = getChildCount();
 
-		background = ImageUtil.getBitmap(getContext(), R.drawable.bookshelf_layer_center, BookShelfActivity.width / 3, BookShelfActivity.height / 3 - 5);
+		background = ImageUtil.getBitmap(getContext(), R.drawable.bookshelf_layer_center, BookShelfActivity.width / 3, BookShelfActivity.height / 3);
 		
 		int top = count > 0 ? getChildAt(0).getTop() : 0;
 		int backgroundWidth = background.getWidth();

@@ -3,6 +3,9 @@
 
     <color name="WHITE">#ffffff</color>
     <color name="BLACK">#000000</color>
+    
+    <color name="light_blue">#ADD8E6</color>
+    
     <color name="buttonNormalBlue">#59c6ff</color>
     <color name="buttonFocusedBlue">#89d7ff</color>
 
